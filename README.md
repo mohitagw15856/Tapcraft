@@ -28,22 +28,19 @@ TapCraft lets you assign custom actions to different tap zones, tap patterns, an
 
 ### 1. Install
 
-```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/tapcraft.git
+git clone https://github.com/mohitagw15856/Tapcraft.git
 cd tapcraft
 
 # Install dependencies
 pip install -r requirements.txt
 
 # macOS only — grant Accessibility permissions when prompted
-```
+
 
 ### 2. Run
 
-```bash
 python tapcraft.py
-```
 
 That's it! TapCraft starts with a sensible default config. A system tray icon appears so you can pause/resume/configure anytime.
 
@@ -51,17 +48,14 @@ That's it! TapCraft starts with a sensible default config. A system tray icon ap
 
 Edit `config.yaml` (auto-created on first run), or use the built-in configurator:
 
-```bash
 python tapcraft.py --configure
-```
 
----
+
 
 ## 🗺️ Trackpad Zones
 
 TapCraft divides your trackpad into a 3×3 grid:
 
-```
 ┌──────────┬──────────┬──────────┐
 │ top-left │ top-mid  │ top-right│
 ├──────────┼──────────┼──────────┤
@@ -69,7 +63,7 @@ TapCraft divides your trackpad into a 3×3 grid:
 ├──────────┼──────────┼──────────┤
 │ bot-left │ bot-mid  │bot-right │
 └──────────┴──────────┴──────────┘
-```
+
 
 Each zone can have different actions for:
 - **Single tap** (1 finger)
@@ -84,7 +78,6 @@ Each zone can have different actions for:
 
 The `config.yaml` file is the heart of TapCraft. Here's a sample:
 
-```yaml
 # TapCraft Configuration
 # Zones: top-left, top-mid, top-right, mid-left, center, mid-right, bot-left, bot-mid, bot-right
 # Gestures: single, double, triple, two-finger, three-finger
@@ -126,7 +119,7 @@ mappings:
       action: clipboard
       value: "paste-plain"
       label: "Paste as Plain Text"
-```
+
 
 ### Action Types
 
@@ -155,7 +148,6 @@ TapCraft can detect physical slaps and hits on your laptop body — and trigger 
 
 ### Quick Start — Slap Mode
 
-```bash
 # macOS Apple Silicon — best experience (uses accelerometer)
 sudo python tapcraft.py --slap-only
 
@@ -170,13 +162,12 @@ sudo python tapcraft.py --slap-only --escalation
 
 # Run both trackpad + slap detection together
 sudo python tapcraft.py
-```
+
 
 ### Strength-Based Actions
 
 TapCraft classifies each hit by strength and lets you assign different actions:
 
-```yaml
 slap:
   enabled: true
   method: auto          # auto, accelerometer, or microphone
@@ -197,13 +188,12 @@ slap:
     any:                # fallback for any strength
       action: sound
       value: "sounds/pop.wav"
-```
+
 
 ### Escalation Mode
 
 Inspired by spank's `--sexy` mode. The more you slap within a time window, the more intense the response:
 
-```yaml
 slap:
   escalation:
     enabled: true
@@ -221,7 +211,6 @@ slap:
       - count: 20
         action: command
         value: "say 'Please stop hitting me!'"
-```
 
 ---
 
@@ -242,30 +231,23 @@ Drop your own `.wav` or `.mp3` files in `sounds/` and reference them in your con
 
 Create a Python file in the `plugins/` directory:
 
-```python
 # plugins/my_action.py
 from tapcraft.plugin import TapPlugin
 
 class MyAction(TapPlugin):
     """A custom action that does something cool."""
     name = "my-action"
-
     def execute(self, value: str, context: dict):
         # value = whatever is in the config "value" field
         # context = {zone, gesture, tap_count, fingers, x, y, timestamp}
         print(f"Custom action triggered in {context['zone']}!")
-```
 
 Then use it in config:
-
-```yaml
   center:
     double:
       action: my-action
       value: "hello"
       label: "My Custom Action"
-```
-
 ---
 
 ## 🖥️ Platform Notes
@@ -289,7 +271,6 @@ Then use it in config:
 
 ## 📁 Project Structure
 
-```
 tapcraft/
 ├── tapcraft.py              # Main entry point
 ├── config.yaml              # User configuration (auto-created)
@@ -325,7 +306,6 @@ tapcraft/
     └── ISSUE_TEMPLATE/
         ├── bug_report.md
         └── feature_request.md
-```
 
 ---
 
