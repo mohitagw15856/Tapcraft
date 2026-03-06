@@ -1,0 +1,209 @@
+# ============================================================
+# TapCraft Configuration
+# ============================================================
+# Customize what happens when you tap different parts of your trackpad
+# or slap/hit your laptop body.
+#
+# ZONES (3x3 grid on your trackpad):
+#   top-left,  top-mid,  top-right
+#   mid-left,  center,   mid-right
+#   bot-left,  bot-mid,  bot-right
+#
+# GESTURES:
+#   single       — one finger, one tap
+#   double       — one finger, two quick taps
+#   triple       — one finger, three quick taps
+#   two-finger   — two-finger tap
+#   three-finger — three-finger tap
+#
+# ACTIONS:
+#   sound      — play a sound file (value: path to .wav/.mp3)
+#   command    — run a shell command (value: any shell command)
+#   notify     — show a desktop notification (value: message text)
+#   type-text  — type text at cursor position (value: the text)
+#   open-app   — launch an application (value: app name or path)
+#   media      — media keys: play-pause, next, prev, vol-up, vol-down
+#   clipboard  — clipboard tools: paste-plain, copy-line
+#   script     — run a Python plugin (value: path to .py file)
+# ============================================================
+
+settings:
+  # Max milliseconds between taps to count as double/triple tap
+  tap_timeout_ms: 300
+
+  # Dead zone padding between regions (0.0 to 0.15)
+  zone_padding: 0.05
+
+  # Show visual/audio feedback when an action triggers
+  feedback: true
+
+  # Log all detected taps to console (for debugging / building your config)
+  log_taps: false
+
+# ============================================================
+# Slap / Hit Detection (inspired by taigrr/spank)
+# ============================================================
+# Detects physical impacts on your laptop body.
+#
+# On macOS Apple Silicon: uses the built-in accelerometer (best)
+# On everything else: uses the microphone to detect impact sounds
+#
+# Slap strength levels: light, medium, hard, brutal
+# You can assign different actions to different strengths!
+# ============================================================
+
+slap:
+  enabled: true
+
+  # Detection method: "auto", "accelerometer", or "microphone"
+  # "auto" picks the best available method for your hardware
+  method: auto
+
+  # --- Accelerometer settings (macOS Apple Silicon only) ---
+  accelerometer:
+    # Minimum acceleration (in g-force) to trigger. Lower = more sensitive.
+    # 0.05-0.10 = very sensitive (light taps)
+    # 0.15-0.30 = balanced
+    # 0.30-0.50 = only hard hits
+    min_amplitude: 0.15
+
+  # --- Microphone settings (cross-platform fallback) ---
+  microphone:
+    # Amplitude threshold (0.0-1.0). Lower = more sensitive.
+    threshold: 0.3
+    # How many times above noise floor to trigger
+    spike_ratio: 4.0
+
+  # Cooldown in ms between slap triggers (prevents rapid-fire)
+  cooldown_ms: 750
+
+  # --- Slap-to-Action Mappings ---
+  # Assign actions based on slap strength!
+  # Strengths: light, medium, hard, brutal, any
+  # "any" triggers on any strength (fallback if specific strength not mapped)
+
+  mappings:
+    any:
+      action: sound
+      value: "sounds/pop.wav"
+      label: "Slap Sound"
+
+    light:
+      action: notify
+      value: "Hey, that tickles!"
+      label: "Light Tap"
+
+    medium:
+      action: sound
+      value: "sounds/click.wav"
+      label: "Medium Hit"
+
+    hard:
+      action: command
+      value: "open -a 'Terminal'"     # macOS
+      # value: "start cmd"            # Windows
+      label: "Hard Slap → Terminal"
+
+    brutal:
+      action: notify
+      value: "OW! That really hurt!"
+      label: "Brutal Hit"
+
+  # --- Escalation Mode (inspired by spank --sexy) ---
+  # Track slap frequency over a time window. The more you slap,
+  # the more intense the response. Great for fun / party mode.
+  escalation:
+    enabled: false
+    window_minutes: 5       # Rolling window to track slap frequency
+    levels:
+      # Each level triggers at N cumulative slaps within the window
+      - count: 1
+        action: sound
+        value: "sounds/ping.wav"
+        label: "Level 1"
+      - count: 5
+        action: notify
+        value: "Getting warmer..."
+        label: "Level 2"
+      - count: 10
+        action: notify
+        value: "You really can't stop, can you?"
+        label: "Level 3"
+      - count: 20
+        action: command
+        value: "say 'Please stop hitting me!'"   # macOS text-to-speech
+        label: "Level 4"
+
+# ============================================================
+# Tap-to-Action Mappings (Trackpad Zones)
+# ============================================================
+
+mappings:
+
+  # --- Top Row ---
+
+  top-left:
+    double:
+      action: command
+      value: "open -a 'Terminal'"      # macOS: open Terminal
+      # value: "start cmd"             # Windows alternative
+      # value: "gnome-terminal"        # Linux alternative
+      label: "Open Terminal"
+
+  top-mid:
+    double:
+      action: notify
+      value: "TapCraft says hello!"
+      label: "Hello Notification"
+
+  top-right:
+    double:
+      action: sound
+      value: "sounds/ping.wav"
+      label: "Ping Sound"
+
+  # --- Middle Row ---
+
+  mid-left:
+    two-finger:
+      action: media
+      value: "prev"
+      label: "Previous Track"
+
+  center:
+    two-finger:
+      action: media
+      value: "play-pause"
+      label: "Play / Pause"
+    triple:
+      action: notify
+      value: "TapCraft is alive and listening!"
+      label: "Status Check"
+
+  mid-right:
+    two-finger:
+      action: media
+      value: "next"
+      label: "Next Track"
+
+  # --- Bottom Row ---
+
+  bot-left:
+    double:
+      action: type-text
+      value: "shrug_face"
+      label: "Shrug"
+
+  bot-mid:
+    three-finger:
+      action: clipboard
+      value: "paste-plain"
+      label: "Paste as Plain Text"
+
+  bot-right:
+    double:
+      action: command
+      value: "open -a 'Activity Monitor'"   # macOS
+      # value: "taskmgr"                     # Windows
+      # value: "gnome-system-monitor"        # Linux
+      label: "System Monitor"
