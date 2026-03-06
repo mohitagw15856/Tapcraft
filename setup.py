@@ -47,7 +47,7 @@ setup(
     description="Turn your trackpad into a programmable command surface. Assign actions to tap zones, gestures, and physical slaps.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/YOUR_USERNAME/tapcraft",
+    url="https://github.com/mohitagw15856/tapcraft",
     author="TapCraft Contributors",
     license="MIT",
     classifiers=[
