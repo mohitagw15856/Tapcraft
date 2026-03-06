@@ -72,8 +72,8 @@ class GestureRecognizer:
         self.timeout_ms = timeout_ms
         self.on_gesture = on_gesture  # callback(zone, gesture_name, tap_events)
 
-        self._pending_taps: list[TapEvent] = []
-        self._timer: threading.Timer | None = None
+        self._pending_taps = []
+        self._timer = None
         self._lock = threading.Lock()
 
     def feed(self, event: TapEvent):
