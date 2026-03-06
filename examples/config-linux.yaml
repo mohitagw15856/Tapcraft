@@ -1,0 +1,104 @@
+# ============================================================
+# TapCraft — Linux Example Config
+# ============================================================
+# Copy this file to config.yaml to use it:
+#   cp examples/config-linux.yaml config.yaml
+#
+# SETUP:
+#   sudo usermod -aG input $USER    (then log out and back in)
+#   pip install evdev pynput pyyaml
+#
+# For slap detection via microphone:
+#   pip install sounddevice numpy
+#   python tapcraft.py --slap-only --slap-method mic
+# ============================================================
+
+settings:
+  tap_timeout_ms: 300
+  zone_padding: 0.05
+  feedback: true
+  log_taps: false
+
+slap:
+  enabled: false       # Set true after: pip install sounddevice numpy
+  method: microphone
+  microphone:
+    threshold: 0.3
+    spike_ratio: 4.0
+  cooldown_ms: 750
+  mappings:
+    any:
+      action: notify
+      value: "Slap detected!"
+      label: "Slap"
+    hard:
+      action: command
+      value: "gnome-terminal"
+      label: "Hard Slap - Terminal"
+  escalation:
+    enabled: false
+    window_minutes: 5
+    levels:
+      - count: 5
+        action: notify
+        value: "Getting warmer..."
+        label: "Level 2"
+
+mappings:
+  top-left:
+    double:
+      action: command
+      value: "gnome-terminal"
+      label: "Open Terminal"
+
+  top-mid:
+    double:
+      action: notify
+      value: "TapCraft says hello!"
+      label: "Hello"
+
+  top-right:
+    double:
+      action: command
+      value: "xdg-open https://google.com"
+      label: "Open Browser"
+
+  mid-left:
+    two-finger:
+      action: media
+      value: "prev"
+      label: "Previous Track"
+
+  center:
+    two-finger:
+      action: media
+      value: "play-pause"
+      label: "Play / Pause"
+    triple:
+      action: notify
+      value: "TapCraft is alive!"
+      label: "Status Check"
+
+  mid-right:
+    two-finger:
+      action: media
+      value: "next"
+      label: "Next Track"
+
+  bot-left:
+    double:
+      action: command
+      value: "nautilus"
+      label: "Open Files"
+
+  bot-mid:
+    three-finger:
+      action: clipboard
+      value: "paste-plain"
+      label: "Paste as Plain Text"
+
+  bot-right:
+    double:
+      action: command
+      value: "gnome-system-monitor"
+      label: "System Monitor"
