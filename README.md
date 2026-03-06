@@ -2,6 +2,9 @@
 
 **Turn your trackpad into a programmable command surface.**
 
+<img width="768" height="512" alt="ChatGPT Image Mar 6, 2026, 07_32_15 PM" src="https://github.com/user-attachments/assets/1f07fe44-5fce-4dd3-964b-2cbfae71ab25" />
+
+
 TapCraft lets you assign custom actions to different tap zones, tap patterns, and multi-finger gestures on your trackpad. It also detects physical slaps on your laptop body (inspired by [taigrr/spank](https://github.com/taigrr/spank)) and maps them to actions based on hit strength.
 
 Make your laptop *yours* — trigger sounds, shortcuts, scripts, or anything you can imagine.
@@ -36,15 +39,35 @@ Make your laptop *yours* — trigger sounds, shortcuts, scripts, or anything you
     cd tapcraft
     pip install -r requirements.txt
 
-**2. Run**
+**2. Launch the GUI**
 
-    python tapcraft.py
+    python tapcraft_gui.py
 
-That's it! TapCraft starts with a sensible default config. Edit `config.yaml` to customize.
+This opens a visual configurator where you can click zones, pick actions from dropdowns, toggle slap detection, and start/stop TapCraft — all without touching the terminal or editing YAML files.
 
-**3. Configure**
+**Or run from the command line:**
 
-    python tapcraft.py --configure
+    python tapcraft.py --log
+
+**3. Platform-specific setup?** See [PLATFORM_GUIDE.md](PLATFORM_GUIDE.md) for macOS, Windows, and Linux details.
+
+---
+
+## GUI Configurator
+
+TapCraft ships with a built-in visual configurator. No YAML editing required.
+
+    python tapcraft_gui.py
+
+**Trackpad Zones tab** — Click any zone in the 3x3 grid to configure its actions. Pick action types from dropdowns, set values, and save.
+
+**Slap Detection tab** — Toggle slap detection on/off, adjust sensitivity with a slider, set cooldown, configure strength-based actions, and enable escalation mode.
+
+**Settings tab** — Tune tap timeout, zone padding, and toggle debug logging.
+
+**Start/Stop button** — Saves your config and launches TapCraft in one click. Hit it again to stop.
+
+You can also edit `config.yaml` directly if you prefer. The GUI and the YAML file stay in sync.
 
 ---
 
@@ -225,21 +248,29 @@ Then use it in config:
 
 ## Platform Notes
 
-**macOS (Best Experience)** — Full multi-touch trackpad support via Quartz Event Taps. Requires Accessibility permissions (System Preferences → Privacy & Security → Accessibility). Supports all zones and gesture types. Accelerometer slap detection on Apple Silicon M2+.
+**macOS (Best Experience)** — Full multi-touch trackpad support via Quartz Event Taps. Your physical trackpad is divided into a 3x3 zone grid. Requires Accessibility permissions. Accelerometer slap detection on Apple Silicon M2+.
 
-**Windows** — Uses raw trackpad input via pynput. Most trackpad features work; multi-touch depends on driver support (Precision Touchpads work best). Run as Administrator for global input capture. Microphone-based slap detection.
+**Windows** — Your screen is divided into a 3x3 grid matching trackpad zones. Click/tap in different screen areas to trigger zone actions. Also supports Ctrl+Alt+Numpad 1-9 hotkeys for direct zone triggers. Right-click = two-finger, middle-click = three-finger. Microphone-based slap detection. Note: true raw trackpad position detection on Windows requires the Precision Touchpad C API — contributions welcome!
 
-**Linux** — Uses /dev/input/ evdev interface for trackpad events. Requires libinput and user must be in the input group (`sudo usermod -aG input $USER` then log out/in). Microphone-based slap detection.
+**Linux** — Uses /dev/input/ evdev interface for trackpad events. Requires user to be in the input group (`sudo usermod -aG input $USER` then log out/in). Microphone-based slap detection.
+
+For full setup instructions per platform, see [PLATFORM_GUIDE.md](PLATFORM_GUIDE.md). Pre-made configs are in the `examples/` folder.
 
 ---
 
 ## Project Structure
 
     tapcraft/
-    ├── tapcraft.py              # Main entry point
+    ├── tapcraft.py              # Main entry point (CLI)
+    ├── tapcraft_gui.py          # Visual configurator (GUI)
     ├── config.yaml              # User configuration (auto-created)
     ├── requirements.txt         # Python dependencies
     ├── setup.py                 # pip install support
+    ├── PLATFORM_GUIDE.md        # Setup instructions per OS
+    ├── examples/                # Pre-made configs per platform
+    │   ├── config-macos.yaml
+    │   ├── config-windows.yaml
+    │   └── config-linux.yaml
     ├── tapcraft/
     │   ├── __init__.py
     │   ├── core.py              # Zone detection, gesture recognition
@@ -250,7 +281,7 @@ Then use it in config:
     │   ├── utils.py             # Shared utilities
     │   └── platforms/
     │       ├── macos.py         # macOS trackpad listener
-    │       ├── windows.py       # Windows trackpad listener
+    │       ├── windows.py       # Windows listener (screen grid + hotkeys)
     │       ├── linux.py         # Linux evdev listener
     │       ├── accel_macos.py   # Apple Silicon accelerometer
     │       └── mic_slap.py      # Microphone slap detection
@@ -268,7 +299,7 @@ Then use it in config:
 
 We'd love your contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-**Ideas for contributions:** new sound packs, action plugins (Spotify control, smart home, etc.), better Windows/Linux trackpad support, a GUI configurator, gesture visualizer overlay, integration with Alfred / Raycast / AutoHotkey.
+**Ideas for contributions:** new sound packs, action plugins (Spotify control, smart home, etc.), native Windows Precision Touchpad support, gesture visualizer overlay, integration with Alfred / Raycast / AutoHotkey.
 
 ---
 
