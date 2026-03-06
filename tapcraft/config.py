@@ -120,7 +120,7 @@ def load_config(path: str = None) -> dict:
     return config
 
 
-def get_action(config: dict, zone: str, gesture: str) -> dict | None:
+def get_action(config: dict, zone: str, gesture: str):
     """Look up the action for a given zone + gesture. Returns None if unmapped."""
     return config.get("mappings", {}).get(zone, {}).get(gesture)
 
