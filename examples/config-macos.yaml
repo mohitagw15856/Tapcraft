@@ -1,0 +1,109 @@
+# ============================================================
+# TapCraft — macOS Example Config
+# ============================================================
+# Copy this file to config.yaml to use it:
+#   cp examples/config-macos.yaml config.yaml
+#
+# For slap detection (Apple Silicon M2+):
+#   sudo python tapcraft.py
+# ============================================================
+
+settings:
+  tap_timeout_ms: 300
+  zone_padding: 0.05
+  feedback: true
+  log_taps: false
+
+slap:
+  enabled: true
+  method: auto           # auto-selects accelerometer on Apple Silicon
+  accelerometer:
+    min_amplitude: 0.15
+  microphone:
+    threshold: 0.3
+    spike_ratio: 4.0
+  cooldown_ms: 750
+  mappings:
+    any:
+      action: notify
+      value: "Slap detected!"
+      label: "Slap"
+    hard:
+      action: open-app
+      value: "Terminal"
+      label: "Hard Slap - Terminal"
+    brutal:
+      action: notify
+      value: "STOP HITTING ME!"
+      label: "Brutal"
+  escalation:
+    enabled: false
+    window_minutes: 5
+    levels:
+      - count: 5
+        action: notify
+        value: "Getting warmer..."
+        label: "Level 2"
+      - count: 20
+        action: command
+        value: "say 'Please stop hitting me!'"
+        label: "Level 4 - Text to Speech"
+
+mappings:
+  top-left:
+    double:
+      action: open-app
+      value: "Terminal"
+      label: "Open Terminal"
+
+  top-mid:
+    double:
+      action: notify
+      value: "TapCraft says hello!"
+      label: "Hello"
+
+  top-right:
+    double:
+      action: open-app
+      value: "Safari"
+      label: "Open Safari"
+
+  mid-left:
+    two-finger:
+      action: media
+      value: "prev"
+      label: "Previous Track"
+
+  center:
+    two-finger:
+      action: media
+      value: "play-pause"
+      label: "Play / Pause"
+    triple:
+      action: notify
+      value: "TapCraft is alive!"
+      label: "Status Check"
+
+  mid-right:
+    two-finger:
+      action: media
+      value: "next"
+      label: "Next Track"
+
+  bot-left:
+    double:
+      action: open-app
+      value: "Finder"
+      label: "Open Finder"
+
+  bot-mid:
+    three-finger:
+      action: clipboard
+      value: "paste-plain"
+      label: "Paste as Plain Text"
+
+  bot-right:
+    double:
+      action: open-app
+      value: "Activity Monitor"
+      label: "Activity Monitor"
