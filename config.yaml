@@ -1,125 +1,101 @@
 # ============================================================
 # TapCraft Configuration
 # ============================================================
-# Customize what happens when you tap different parts of your trackpad
-# or slap/hit your laptop body.
+# Works on macOS, Windows, and Linux — no edits needed!
 #
-# ZONES (3x3 grid on your trackpad):
+# FIRST TIME? Run with --log to see what's happening:
+#   python tapcraft.py --log
+#
+# HOW INPUT WORKS PER PLATFORM:
+#   macOS   → trackpad multi-touch (best experience)
+#   Windows → screen divided into 3x3 grid + hotkeys Ctrl+Alt+Numpad 1-9
+#   Linux   → trackpad via evdev
+#
+# ZONES (3x3 grid):
 #   top-left,  top-mid,  top-right
 #   mid-left,  center,   mid-right
 #   bot-left,  bot-mid,  bot-right
 #
 # GESTURES:
-#   single       — one finger, one tap
-#   double       — one finger, two quick taps
-#   triple       — one finger, three quick taps
-#   two-finger   — two-finger tap
-#   three-finger — three-finger tap
+#   single, double, triple, two-finger, three-finger
 #
 # ACTIONS:
-#   sound      — play a sound file (value: path to .wav/.mp3)
-#   command    — run a shell command (value: any shell command)
-#   notify     — show a desktop notification (value: message text)
-#   type-text  — type text at cursor position (value: the text)
-#   open-app   — launch an application (value: app name or path)
+#   notify     — show a desktop notification (works everywhere)
+#   open-app   — launch an app by name (cross-platform, see below)
+#   command    — run a shell command (platform-specific! see note below)
+#   sound      — play a .wav/.mp3 file
+#   type-text  — type text at cursor position
 #   media      — media keys: play-pause, next, prev, vol-up, vol-down
 #   clipboard  — clipboard tools: paste-plain, copy-line
-#   script     — run a Python plugin (value: path to .py file)
+#   script     — run a Python plugin
+#
+# ============================================================
+# ABOUT THE "command" vs "open-app" ACTION:
+#
+# "open-app" is CROSS-PLATFORM — it opens apps by name:
+#   macOS:   uses "open -a <name>" internally
+#   Windows: uses "start <name>" internally
+#   Linux:   launches the binary directly
+#
+# "command" runs a RAW SHELL COMMAND — it is platform-specific!
+#   If you use "command", you must use the right syntax:
+#   macOS:   open -a 'Terminal'
+#   Windows: start cmd
+#   Linux:   gnome-terminal
+#
+# TIP: Prefer "notify" and "open-app" for cross-platform configs.
+#      Use "command" only when you need something platform-specific.
 # ============================================================
 
 settings:
-  # Max milliseconds between taps to count as double/triple tap
   tap_timeout_ms: 300
-
-  # Dead zone padding between regions (0.0 to 0.15)
   zone_padding: 0.05
-
-  # Show visual/audio feedback when an action triggers
   feedback: true
-
-  # Log all detected taps to console (for debugging / building your config)
-  log_taps: false
+  log_taps: false     # Set to true for debugging
 
 # ============================================================
 # Slap / Hit Detection (inspired by taigrr/spank)
 # ============================================================
-# Detects physical impacts on your laptop body.
-#
-# On macOS Apple Silicon: uses the built-in accelerometer (best)
-# On everything else: uses the microphone to detect impact sounds
-#
-# Slap strength levels: light, medium, hard, brutal
-# You can assign different actions to different strengths!
-# ============================================================
+# macOS Apple Silicon (M2+): uses accelerometer (run with sudo)
+# Windows / Linux: uses microphone (pip install sounddevice numpy)
 
 slap:
-  enabled: true
-
-  # Detection method: "auto", "accelerometer", or "microphone"
-  # "auto" picks the best available method for your hardware
+  enabled: false      # Set to true after reading platform notes above
   method: auto
-
-  # --- Accelerometer settings (macOS Apple Silicon only) ---
   accelerometer:
-    # Minimum acceleration (in g-force) to trigger. Lower = more sensitive.
-    # 0.05-0.10 = very sensitive (light taps)
-    # 0.15-0.30 = balanced
-    # 0.30-0.50 = only hard hits
     min_amplitude: 0.15
-
-  # --- Microphone settings (cross-platform fallback) ---
   microphone:
-    # Amplitude threshold (0.0-1.0). Lower = more sensitive.
     threshold: 0.3
-    # How many times above noise floor to trigger
     spike_ratio: 4.0
-
-  # Cooldown in ms between slap triggers (prevents rapid-fire)
   cooldown_ms: 750
-
-  # --- Slap-to-Action Mappings ---
-  # Assign actions based on slap strength!
-  # Strengths: light, medium, hard, brutal, any
-  # "any" triggers on any strength (fallback if specific strength not mapped)
-
   mappings:
     any:
-      action: sound
-      value: "sounds/pop.wav"
-      label: "Slap Sound"
-
+      action: notify
+      value: "Slap detected!"
+      label: "Slap"
     light:
       action: notify
       value: "Hey, that tickles!"
       label: "Light Tap"
-
     medium:
-      action: sound
-      value: "sounds/click.wav"
+      action: notify
+      value: "Ok I felt that."
       label: "Medium Hit"
-
     hard:
-      action: command
-      value: "open -a 'Terminal'"     # macOS
-      # value: "start cmd"            # Windows
-      label: "Hard Slap → Terminal"
-
+      action: notify
+      value: "OW! That hurt!"
+      label: "Hard Slap"
     brutal:
       action: notify
-      value: "OW! That really hurt!"
+      value: "STOP HITTING ME!"
       label: "Brutal Hit"
-
-  # --- Escalation Mode (inspired by spank --sexy) ---
-  # Track slap frequency over a time window. The more you slap,
-  # the more intense the response. Great for fun / party mode.
   escalation:
     enabled: false
-    window_minutes: 5       # Rolling window to track slap frequency
+    window_minutes: 5
     levels:
-      # Each level triggers at N cumulative slaps within the window
       - count: 1
-        action: sound
-        value: "sounds/ping.wav"
+        action: notify
+        value: "First slap registered."
         label: "Level 1"
       - count: 5
         action: notify
@@ -129,13 +105,12 @@ slap:
         action: notify
         value: "You really can't stop, can you?"
         label: "Level 3"
-      - count: 20
-        action: command
-        value: "say 'Please stop hitting me!'"   # macOS text-to-speech
-        label: "Level 4"
 
 # ============================================================
-# Tap-to-Action Mappings (Trackpad Zones)
+# Tap-to-Action Mappings
+# ============================================================
+# These all use "notify" and "open-app" so they work on ANY platform.
+# Customize to your liking!
 # ============================================================
 
 mappings:
@@ -144,23 +119,21 @@ mappings:
 
   top-left:
     double:
-      action: command
-      value: "open -a 'Terminal'"      # macOS: open Terminal
-      # value: "start cmd"             # Windows alternative
-      # value: "gnome-terminal"        # Linux alternative
-      label: "Open Terminal"
+      action: notify
+      value: "Top-left double tap!"
+      label: "Top-Left Alert"
 
   top-mid:
     double:
       action: notify
       value: "TapCraft says hello!"
-      label: "Hello Notification"
+      label: "Hello"
 
   top-right:
     double:
-      action: sound
-      value: "sounds/ping.wav"
-      label: "Ping Sound"
+      action: notify
+      value: "Top-right double tap!"
+      label: "Top-Right Alert"
 
   # --- Middle Row ---
 
@@ -179,6 +152,10 @@ mappings:
       action: notify
       value: "TapCraft is alive and listening!"
       label: "Status Check"
+    double:
+      action: notify
+      value: "Center double tap!"
+      label: "Center Alert"
 
   mid-right:
     two-finger:
@@ -190,9 +167,9 @@ mappings:
 
   bot-left:
     double:
-      action: type-text
-      value: "shrug_face"
-      label: "Shrug"
+      action: notify
+      value: "Bottom-left double tap!"
+      label: "Bot-Left Alert"
 
   bot-mid:
     three-finger:
@@ -202,8 +179,6 @@ mappings:
 
   bot-right:
     double:
-      action: command
-      value: "open -a 'Activity Monitor'"   # macOS
-      # value: "taskmgr"                     # Windows
-      # value: "gnome-system-monitor"        # Linux
-      label: "System Monitor"
+      action: notify
+      value: "Bottom-right double tap!"
+      label: "Bot-Right Alert"
