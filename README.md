@@ -35,7 +35,7 @@ Make your laptop *yours* — trigger sounds, shortcuts, scripts, or anything you
 
 **1. Install**
 
-    git clone https://github.com/mohitagw15856/tapcraft.git
+    git clone https://github.com/mohitagw15856/Tapcraft.git
     cd tapcraft
     pip install -r requirements.txt
 
@@ -310,3 +310,5 @@ MIT License — see [LICENSE](LICENSE) for details.
 ---
 
 **Made with love by the TapCraft community. Star this repo if you find it useful!**
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support-yellow?logo=buy-me-a-coffee&logoColor=white)](https://buymeacoffee.com/mohit15856)
