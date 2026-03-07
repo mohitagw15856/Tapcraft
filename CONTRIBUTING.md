@@ -38,8 +38,10 @@ Help improve trackpad detection on:
 - Translate docs
 
 ## Development Setup
+
+```bash
 # Fork and clone
-git clone https://github.com/mohitagw15856/tapcraft.git
+git clone https://github.com/mohitagw15856/Tapcraft.git
 cd tapcraft
 
 # Create a virtual environment
@@ -51,6 +53,7 @@ pip install -r requirements.txt
 
 # Run tests
 python -m pytest tests/ -v
+```
 
 ## Pull Request Process
 
