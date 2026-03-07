@@ -8,7 +8,7 @@ TapCraft works on macOS, Windows, and Linux but each platform has different capa
 
 **Setup:**
 
-    git clone https://github.com/YOUR_USERNAME/tapcraft.git
+    git clone https://github.com/mohitagw15856/Tapcraft.git
     cd tapcraft
     pip install pyyaml pyobjc-framework-Quartz pyobjc-framework-Cocoa
 
@@ -33,7 +33,7 @@ TapCraft works on macOS, Windows, and Linux but each platform has different capa
 
 **Setup:**
 
-    git clone https://github.com/YOUR_USERNAME/tapcraft.git
+    git clone https://github.com/mohitagw15856/Tapcraft.git
     cd tapcraft
     pip install pyyaml pynput
 
@@ -70,7 +70,7 @@ Right-click counts as a two-finger tap. Middle-click counts as three-finger.
 
 **Setup:**
 
-    git clone https://github.com/YOUR_USERNAME/tapcraft.git
+    git clone https://github.com/mohitagw15856/Tapcraft.git
     cd tapcraft
     pip install pyyaml evdev pynput
 
